@@ -10,14 +10,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Bootstrap implements CommandLineRunner {
+public class BootstrapData implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
 
     private final PublisherRepository publisherRepository;
 
-    public Bootstrap(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
+    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.publisherRepository = publisherRepository;
@@ -50,6 +50,8 @@ public class Bootstrap implements CommandLineRunner {
 
         auth1.getBooks().add(book1);
         auth2.getBooks().add(book2);
+        book1.getAuthors().add(auth1);
+        book2.getAuthors().add(auth2);
 
         authorRepository.save(auth1);
         authorRepository.save(auth2);
@@ -62,6 +64,12 @@ public class Bootstrap implements CommandLineRunner {
         pub1.setZip("000123");
 
         Publisher savedPublisher = publisherRepository.save(pub1);
+
+        savedBook1.setPublisher(savedPublisher);
+        savedBook2.setPublisher(savedPublisher);
+
+        bookRepository.save(savedBook1);
+        bookRepository.save(savedBook2);
 
         System.out.println("Inside Bootstrap Class");
         System.out.println("Author Count : " + authorRepository.count());
